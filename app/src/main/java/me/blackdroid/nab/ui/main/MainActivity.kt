@@ -11,6 +11,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import me.blackdroid.nab.R
 import me.blackdroid.nab.databinding.ActivityMainBinding
+import me.blackdroid.nab.ext.hideKeyboard
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -20,11 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel : MainViewModel
 
     private val adapter by lazy {
-        DailyAdapter( emptyList() ).apply {
-            itemClickEvent.subscribe {
-                
-            }
-        }
+        DailyAdapter( emptyList() )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java).apply {
-            foreCast.observe(this@MainActivity, Observer {forecast ->
+            foreCast.observe(this@MainActivity, { forecast ->
                 forecast.list?.let {
                     adapter.data = it
                 }
@@ -47,7 +44,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnLoad.setOnClickListener {
+            adapter.clearData()
             viewModel.loadDaily()
+            this@MainActivity.hideKeyboard()
         }
 
     }

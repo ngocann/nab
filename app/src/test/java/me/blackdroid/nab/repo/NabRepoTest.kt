@@ -22,7 +22,7 @@ class NabRepoTest {
 
     @Before
     fun setUp() {
-        nabRepo = NabRepo(nabService = nabService, forecastDao = forecastDao)
+        nabRepo = NabRepoImpl(nabService = nabService, forecastDao = forecastDao)
     }
 
     @Test

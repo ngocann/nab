@@ -8,8 +8,12 @@ import me.blackdroid.nab.NabApp
 import me.blackdroid.nab.data.local.ForecastDao
 import me.blackdroid.nab.data.local.NabDb
 import me.blackdroid.nab.data.remote.NabService
+import me.blackdroid.nab.repo.NabRepo
+import me.blackdroid.nab.repo.NabRepoImpl
 import me.blackdroid.nab.util.rx.AppSchedulerProvider
 import me.blackdroid.nab.util.rx.SchedulerProvider
+import net.sqlcipher.database.SQLiteDatabase
+import net.sqlcipher.database.SupportFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -47,8 +51,10 @@ class AppModule {
     @Singleton
     @Provides
     fun provideDb(app: NabApp): NabDb {
-        return Room.databaseBuilder(app, NabDb::class.java, NAB_DB)
-            .build()
+        val builder =  Room.databaseBuilder(app, NabDb::class.java, NAB_DB)
+        val factory = SupportFactory(SQLiteDatabase.getBytes("PassPhrase".toCharArray()))
+        builder.openHelperFactory(factory)
+        return builder.build()
     }
 
 
@@ -62,6 +68,13 @@ class AppModule {
     @Provides
     fun provideSchedulerProvider(): SchedulerProvider {
         return AppSchedulerProvider()
+    }
+
+    @Singleton
+    @Provides
+    fun provideNabRepo(nabService: NabService,
+                       forecastDao: ForecastDao): NabRepo {
+        return NabRepoImpl(nabService, forecastDao)
     }
 
 }

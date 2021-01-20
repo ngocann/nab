@@ -27,9 +27,12 @@ open class BaseAdapter<M>(
 
     var data: List<M> = emptyList()
         set(values) {
+            dataset.clear()
             dataset.addAll(values)
             notifyDataSetChanged()
         }
+
+    fun clearData() = dataset.clear()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<M> =
             ViewHolder(
