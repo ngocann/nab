@@ -10,6 +10,7 @@
 - Databinding with LiveData.
 - AndroidX and KTX libraries like: viewmodel-ktx, livedata-ktx.
 - Testing: JUnit4, Hamcrest.
+- Security App: **Sqlcipher**, **SSLpining*
 
 ## **2. Code folders:**
 - _/data_: Include repositories, local and remote data sources.
